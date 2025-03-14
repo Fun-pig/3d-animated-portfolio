@@ -1,28 +1,89 @@
+import { Canvas } from "@react-three/fiber";
 import "./hero.css";
 import Speech from "./Speech";
+import { motion } from "motion/react";
+import Shape from "./Shape";
+import { Suspense } from "react";
 
+const awardVariants = {
+  initial: {
+    x: -100,
+    opacity: 0,
+  },
+  animate: {
+    x: 0,
+    opacity: 1,
+    transition: {
+      duration: 1,
+      // 每个子项持续1秒钟
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const followVariants = {
+  initial: {
+    y: -100,
+    opacity: 0,
+  },
+  animate: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 1,
+      // 每个子项持续1秒钟
+      staggerChildren: 0.2,
+    },
+  },
+};
 const Hero = () => {
   return (
     <div className="hero">
       <div className="hSection left">
         {/* TITLE */}
-        <h1 className="hTitle">
+        <motion.h1
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{
+            duration: 1,
+          }}
+          className="hTitle"
+        >
           Hey There
           <br />
           <span>I'm Robert!</span>
-        </h1>
+        </motion.h1>
         {/* AWARDS */}
-        <div className="awards">
-          <h2>Top Rated Designer</h2>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-          <div className="awardList">
-            <img src="/award1.png" alt="" />
-            <img src="/award2.png" alt="" />
-            <img src="/award3.png" alt="" />
-          </div>
-        </div>
+        <motion.div
+          variants={awardVariants}
+          initial="initial"
+          animate="animate"
+          className="awards"
+        >
+          <motion.h2 variants={awardVariants}>Top Rated Designer</motion.h2>
+          <motion.p variants={awardVariants}>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+          </motion.p>
+          <motion.div variants={awardVariants} className="awardList">
+            <motion.img variants={awardVariants} src="/award1.png" alt="" />
+            <motion.img variants={awardVariants} src="/award2.png" alt="" />
+            <motion.img variants={awardVariants} src="/award3.png" alt="" />
+          </motion.div>
+        </motion.div>
         {/* SCROLL SVG */}
-        <a href="#services" className="scroll">
+        <motion.a
+          animate={{
+            y: [0, 5],
+            opacity: [0, 1, 0],
+            transition: {
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+            },
+          }}
+          href="#services"
+          className="scroll"
+        >
           <svg
             width="50px"
             height="50px"
@@ -35,42 +96,76 @@ const Hero = () => {
               stroke="white"
               strokeWidth="1"
             />
-            <path
+            <motion.path
+              animate={{
+                y: [0, 5],
+                transition: {
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                },
+              }}
               d="M12 5V8"
               stroke="white"
               strokeWidth="1"
               strokeLinecap="round"
             />
           </svg>
-        </a>
+        </motion.a>
       </div>
       <div className="hSection right">
         {/* FOLLOW */}
-        <div className="follow">
-          <a href="/">
+        <motion.div
+          variants={followVariants}
+          initial="initial"
+          animate="animate"
+          className="follow"
+        >
+          <motion.a variants={followVariants} href="/">
             <img src="/instagram.png" alt="" />
-          </a>
-          <a href="/">
+          </motion.a>
+          <motion.a variants={followVariants} href="/">
             <img src="/facebook.png" alt="" />
-          </a>
-          <a href="/">
-            <img src="/youtobe.png" alt="" />
-          </a>
-        </div>
+          </motion.a>
+          <motion.a variants={followVariants} href="/">
+            <img src="/youtube.png" alt="" />
+          </motion.a>
+          <motion.div variants={followVariants} className="followTextContainer">
+            <div className="followText">FOLLOW ME</div>
+          </motion.div>
+        </motion.div>
         {/* BUBBLE */}
         <Speech />
         {/* CERTIFICATE */}
-        <div className="certificate">
+        <motion.div
+          animate={{ opacity: [0, 1] }}
+          transition={{ duration: 1 }}
+          className="certificate"
+        >
           <img src="/certificate.png" alt="" />
           LMA CERTIFICED
           <br />
           PROFESSIONAL
           <br />
           UI DESIGNER
-        </div>
+        </motion.div>
         {/* CONTACT BUTTON */}
-        <a href="/#contact" className="contactLink">
-          <div className="contactButton">
+        <motion.a
+          href="/#contact"
+          className="contactLink"
+          animate={{
+            x: [200, 0],
+            opacity: [0, 1],
+          }}
+          transition={{
+            duration: 2,
+          }}
+        >
+          <motion.div
+            animate={{ rotate: [0, 360] }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+            className="contactButton"
+          >
             <svg viewBox="0 0 200 200" width="150" height="150">
               <circle cx="100" cy="100" r="90" fill="pink" />
               <path
@@ -101,8 +196,20 @@ const Hero = () => {
                 <polyline points="9 6 18 6 18 15" />
               </svg>
             </div>
-          </div>
-        </a>
+          </motion.div>
+        </motion.a>
+      </div>
+      <div className="bg">
+        {/* 3d */}
+        <Canvas>
+          {/* 3D需要花费更长的时间加载，防止中断 */}
+          <Suspense fallback="loading...">
+            <Shape />
+          </Suspense>
+        </Canvas>
+        <div className="hImg">
+          <img src="/hero.png" alt="" />
+        </div>
       </div>
     </div>
   );
